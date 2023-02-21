@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import routerUser   from '../routes/usuarios.js'
+import routerAuth from '../routes/auth.js'
 import {dbConection} from '../database/config.js'
 export class Server{
     constructor(){
@@ -32,6 +33,7 @@ export class Server{
 
     routes(){
         this.app.use(this.usuariosPath,routerUser)
+        this.app.use(this.authPath,routerAuth)
     }
     listen(){
         this.app.listen(this.port,()=>{
