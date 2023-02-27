@@ -6,6 +6,8 @@ import {dbConection} from '../database/config.js'
 import categoriasRouter from '../routes/categorias.js'
 import { productosRouter } from '../routes/productos.js'
 import busquedaRouter from '../routes/buscar.js'
+import uploadRouter from '../routes/uploads.js'
+import fileUpload from 'express-fileupload'
 export class Server{
     constructor(){
         this.app=express()
@@ -15,6 +17,7 @@ export class Server{
         this.categoriasPath="/api/categorias"
         this.productosPath="/api/productos"
         this.buscarPath="/api/buscar"
+        this.subirArchivos="/api/archivos"
         //Conectar a base de datos 
         this.conectarDB()
 
@@ -34,6 +37,13 @@ export class Server{
         this.app.use(cors())
         //Parse y lectura del body
         this.app.use(express.json())
+
+        //File upload 
+        this.app.use(fileUpload({
+            useTempFiles:true,
+            tempFileDir:'/tmp/',
+            createParentPath:true
+        }))
     }
 
     routes(){
@@ -42,6 +52,7 @@ export class Server{
         this.app.use(this.categoriasPath,categoriasRouter)
         this.app.use(this.productosPath,productosRouter)
         this.app.use(this.buscarPath,busquedaRouter)
+        this.app.use(this.subirArchivos,uploadRouter)
     }
     listen(){
         this.app.listen(this.port,()=>{
